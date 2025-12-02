@@ -237,4 +237,4 @@ Pytania? Otwórz Issue na GitHubie!
 
 ---
 
-**Projekt edukacyjny** | **2024** | **Windows Only**
+**Projekt edukacyjny** | **2025** | **Windows Only**
