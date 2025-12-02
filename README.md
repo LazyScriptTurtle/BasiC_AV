@@ -75,7 +75,7 @@ BasicAV/
 
 **Kompilacja z Developer Command Prompt:**
 ```cmd
-cl Logger\logger.c Database\database.c Database\sqlite3.c Hash\hash.c Scanner\scanner.c main.c Advapi32.lib /Fe:BasicAV.exe
+cl Logger\logger.c Database\database.c Database\sqlite3.c Hash\hash.c Scanner\scanner.c MalwareDB\malware_db.c main.c Advapi32.lib /Fe:BasicAV.exe
 ```
 
 ## 💻 Użycie
