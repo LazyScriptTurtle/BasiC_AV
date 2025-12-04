@@ -4,9 +4,77 @@
 #include "hash.h"
 #include "..\Logger\logger.h"
 
+#define CHUNK_SIZE 131072  
+
+int calculate_file_hash(char* filepath, char* output_hash) {
+    FILE* file = fopen(filepath, "rb");
+    if (file == NULL) {
+        
+        return -1;  
+    }
+
+    HCRYPTPROV hProv = 0;
+    HCRYPTHASH hHash = 0;
+
+    
+    if (!CryptAcquireContext(&hProv, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT)) {
+        fclose(file);
+        return -1;
+    }
+
+    
+    if (!CryptCreateHash(hProv, CALG_SHA_256, 0, 0, &hHash)) {
+        CryptReleaseContext(hProv, 0);
+        fclose(file);
+        return -1;
+    }
+
+    
+    unsigned char buffer[CHUNK_SIZE];
+    size_t bytes_read;
+
+    while ((bytes_read = fread(buffer, 1, CHUNK_SIZE, file)) > 0) {
+        if (!CryptHashData(hHash, buffer, (DWORD)bytes_read, 0)) {
+            CryptDestroyHash(hHash);
+            CryptReleaseContext(hProv, 0);
+            fclose(file);
+            return -1;
+        }
+    }
+
+    fclose(file);
+
+    
+    DWORD hashLen = 32;
+    BYTE hashBytes[32];
+
+    if (!CryptGetHashParam(hHash, HP_HASHVAL, hashBytes, &hashLen, 0)) {
+        CryptDestroyHash(hHash);
+        CryptReleaseContext(hProv, 0);
+        return -1;
+    }
+
+    
+    output_hash[0] = '\0';
+    for (DWORD i = 0; i < hashLen; i++) {
+        sprintf(output_hash + (i * 2), "%02x", hashBytes[i]);
+    }
+
+    
+    CryptDestroyHash(hHash);
+    CryptReleaseContext(hProv, 0);
+
+    return 0;  
+}
 
 
-void calculate_file_hash(char* filepath, char* output_hash) {
+
+
+
+
+
+
+/*void calculate_file_hash(char* filepath, char* output_hash) {
     //log_info("Starting hash calculation");
     FILE* file = fopen(filepath, "rb");
     if (file == NULL){
@@ -73,4 +141,4 @@ CryptDestroyHash(hHash);
 CryptReleaseContext(hProv, 0);
 free(buffer);
 
-}
+}*/

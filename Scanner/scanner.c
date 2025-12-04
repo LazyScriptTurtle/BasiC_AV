@@ -47,10 +47,9 @@ void scan_directory(char *path)
         {
             scan_directory(fullPath);
         }
-        else
+        char hash[65];
+        if (calculate_file_hash(fullPath, hash) == 0)
         {
-            char hash[65];
-            calculate_file_hash(fullPath, hash);
             insert_file_record(fullPath, hash);
         }
     } while (FindNextFileA(hFind, &ffd) != 0);

@@ -93,39 +93,84 @@ void insert_malware_hash(char *sha256, char *file_name, char *file_type, char *f
 {
     sqlite3 *db;
     int rc = sqlite3_open(DB_PATH, &db);
-    
-    if (rc != SQLITE_OK) {
+
+    if (rc != SQLITE_OK)
+    {
         log_error("Cannot Open database");
         sqlite3_close(db);
         return;
     }
-    
+
     char *sql = "INSERT OR IGNORE INTO malware_hashes(sha256, file_name, file_type, first_seen, reporter) VALUES (?, ?, ?, ?, ?)";
-    
+
     sqlite3_stmt *stmt;
     rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
-    
-    if (rc != SQLITE_OK) {
+
+    if (rc != SQLITE_OK)
+    {
         log_error("Failed to prepare statement");
         sqlite3_close(db);
         return;
     }
-    
-    sqlite3_bind_text(stmt, 1, sha256, -1, SQLITE_STATIC);      
-    sqlite3_bind_text(stmt, 2, file_name, -1, SQLITE_STATIC);   
-    sqlite3_bind_text(stmt, 3, file_type, -1, SQLITE_STATIC);  
-    sqlite3_bind_text(stmt, 4, first_seen, -1, SQLITE_STATIC);  
-    sqlite3_bind_text(stmt, 5, reporter, -1, SQLITE_STATIC); 
-    
+
+    sqlite3_bind_text(stmt, 1, sha256, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, file_name, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, file_type, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, first_seen, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 5, reporter, -1, SQLITE_STATIC);
+
     rc = sqlite3_step(stmt);
-    
-    if (rc != SQLITE_DONE) {
+
+    if (rc != SQLITE_DONE)
+    {
         log_error("Failed to insert malware hash");
-    } //else {
+    } // else {
     //    log_info("Malware hash inserted successfully");
     //}
-    
+
     sqlite3_finalize(stmt);
-    
+
     sqlite3_close(db);
+}
+
+int compare_hashes(void)
+{
+    log_info("Starting searching malware...");
+
+    sqlite3 *db;
+    int rc = sqlite3_open(DB_PATH, &db);
+    if (rc != SQLITE_OK)
+    {
+        log_error("Cannot open Database fo comparison");
+        return -1;
+    }
+    const char *sql = "SELECT s.filepath, s.sha256_hash "
+                      "FROM scanned_files s "
+                      "INNER JOIN malware_hashes m ON s.sha256_hash = m.sha256";
+
+    sqlite3_stmt *stmt;
+    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (rc != SQLITE_OK)
+    {
+        log_error("Failed to prepare statement: %s", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return -1;
+    }
+
+    int threat_count = 0;
+
+    while (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        const char *filepath = (const char *)sqlite3_column_text(stmt, 0);
+        const char *hash = (const char *)sqlite3_column_text(stmt, 1);
+
+        threat_count++;
+        log_warning("THREAT DETECTED: %s [%s]", filepath, hash);
+    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    log_info("Malware search complete. Threats found: %d", threat_count);
+    return threat_count;
+
 }

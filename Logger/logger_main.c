@@ -1,12 +1,10 @@
-
 #include "logger.h"
-#include <stdio.h>
 
-int main () {
-
-    log_info("Testowe Info");
-    log_warning("Testowe warning");
-    log_error("Testowe error");
-
+int main() {
+    log_info("Program started");
+    log_info("Found %d files", 42);
+    log_warning("Skipped folder: %s", "C:\\Windows");
+    log_error("SQL error: %s", "database locked");
+    
     return 0;
 }
