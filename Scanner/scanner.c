@@ -19,6 +19,13 @@ int file_exists(char *filepath)
         return 1;
     }
 }
+int directory_exists(char *path)
+{
+    DWORD attrib = GetFileAttributesA(path);
+    
+    return (attrib != INVALID_FILE_ATTRIBUTES && 
+            (attrib & FILE_ATTRIBUTE_DIRECTORY));
+}
 
 void scan_directory(char *path)
 {
@@ -31,8 +38,9 @@ void scan_directory(char *path)
     hFind = FindFirstFileA(szDirWithPattern, &ffd);
     if (hFind == INVALID_HANDLE_VALUE)
     {
-        printf("%s\n", szDirWithPattern);
-        log_warning("Cannot Open directory");
+        char msg[1045];
+        sprintf(msg, "Cannot Open directory: %s", szDirWithPattern);
+        log_warning(msg);
         return;
     }
     do
@@ -70,6 +78,48 @@ void scan_all_drives()
             log_info(log_msg);
             sprintf(drive_path, "%c:\\", drive_letter);
             scan_directory(drive_path);
+        }
+    }
+}
+
+void fast_scan_critical_directory()
+{
+
+    char *paths[] = {
+        "C:\\Users\\%USERNAME%\\Downloads",
+        "C:\\Users\\%USERNAME%\\Desktop",
+        "C:\\Users\\%USERNAME%\\AppData\\Local\\Temp",
+        "C:\\Windows\\Temp",
+        "C:\\Users\\%USERNAME%\\Documents",
+        NULL};
+
+    char username[256];
+    DWORD size = sizeof(username);
+    GetUserNameA(username, &size);
+
+    for (int i = 0; paths[i] != NULL; i++)
+    {
+        char *pos = strstr(paths[i], "%USERNAME%");
+        char expanded[MAX_PATH];
+        if (pos != NULL)
+        {
+            int prefix_len = pos - paths[i];
+
+            strncpy(expanded, paths[i], prefix_len);
+            expanded[prefix_len] = '\0';
+            strcat(expanded, username);
+            strcat(expanded, pos + strlen("%USERNAME%"));
+        }
+        else
+        {
+            strcpy(expanded, paths[i]);
+        }
+        if (directory_exists(expanded))
+        {
+            log_info("Scanning: %s", expanded);
+            scan_directory(expanded);
+        }else{
+            log_warning("PAth not found: %s", expanded);
         }
     }
 }

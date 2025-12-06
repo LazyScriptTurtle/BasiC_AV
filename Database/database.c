@@ -63,29 +63,42 @@ void insert_file_record(char *filepath, char *hash)
 {
 
     sqlite3 *db;
-    char sql[1024];
+    sqlite3_stmt *stmt;
+    char *sql = "INSERT INTO scanned_files (filepath, sha256_hash, scan_date) VALUES (?, ?, datetime('now'))";
     int rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
     if (rc != SQLITE_OK)
     {
-        log_error("Cannot Open database");
+        log_error("Failed to prepare statement");
+        sqlite3_finalize(stmt);
         sqlite3_close(db);
         return;
     }
-    sprintf(sql, "INSERT INTO scanned_files (filepath, sha256_hash, scan_date) VALUES ('%s', '%s', datetime('now'))", filepath, hash);
-    char *err_msg = 0;
-    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-
+    rc = sqlite3_bind_text(stmt, 1, filepath, -1, SQLITE_TRANSIENT);
     if (rc != SQLITE_OK)
     {
-        printf("SQL error: %s\n", err_msg);
-        log_error("SQL error");
-        sqlite3_free(err_msg);
-        log_error("Failed to insert recrod");
+        log_error("Failed to bind filepath");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return;
     }
-    // else
-    // {
-    //     log_info("Record inserted successfully");
-    // }
+
+    rc = sqlite3_bind_text(stmt, 2, hash, -1, SQLITE_TRANSIENT);
+    if (rc != SQLITE_OK)
+    {
+        log_error("Failed to bind hash");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return;
+    }
+    rc = sqlite3_step(stmt);
+    if(rc != SQLITE_DONE){
+        log_error("Failed to execute statement");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return;
+    }
+    sqlite3_finalize(stmt);
     sqlite3_close(db);
 }
 
@@ -172,5 +185,4 @@ int compare_hashes(void)
 
     log_info("Malware search complete. Threats found: %d", threat_count);
     return threat_count;
-
 }
