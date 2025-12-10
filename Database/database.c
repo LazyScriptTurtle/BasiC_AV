@@ -2,7 +2,9 @@
 #include "sqlite3.h"
 #include "stdio.h"
 #include "..\Logger\logger.h"
+#include "..\Reporter\reporter.h"
 #include <string.h>
+
 char DB_PATH[256] = "";
 
 void init_database(char *db_path)
@@ -92,7 +94,8 @@ void insert_file_record(char *filepath, char *hash)
         return;
     }
     rc = sqlite3_step(stmt);
-    if(rc != SQLITE_DONE){
+    if (rc != SQLITE_DONE)
+    {
         log_error("Failed to execute statement");
         sqlite3_finalize(stmt);
         sqlite3_close(db);
@@ -146,7 +149,7 @@ void insert_malware_hash(char *sha256, char *file_name, char *file_type, char *f
     sqlite3_close(db);
 }
 
-int compare_hashes(void)
+int compare_hashes(ThreatReport *report)
 {
     log_info("Starting searching malware...");
 
@@ -157,9 +160,11 @@ int compare_hashes(void)
         log_error("Cannot open Database fo comparison");
         return -1;
     }
-    const char *sql = "SELECT s.filepath, s.sha256_hash "
-                      "FROM scanned_files s "
-                      "INNER JOIN malware_hashes m ON s.sha256_hash = m.sha256";
+    const char *sql =
+        "SELECT s.filepath, s.sha256_hash, s.scan_date, "
+        "       m.file_name, m.file_type, m.first_seen, m.reporter "
+        "FROM scanned_files s "
+        "INNER JOIN malware_hashes m ON s.sha256_hash = m.sha256";
 
     sqlite3_stmt *stmt;
     rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
@@ -174,8 +179,38 @@ int compare_hashes(void)
 
     while (sqlite3_step(stmt) == SQLITE_ROW)
     {
+        ThreatInfo threat;
+
         const char *filepath = (const char *)sqlite3_column_text(stmt, 0);
         const char *hash = (const char *)sqlite3_column_text(stmt, 1);
+        const char *scan_date = (const char *)sqlite3_column_text(stmt, 2);
+        const char *file_name = (const char *)sqlite3_column_text(stmt, 3);
+        const char *file_type = (const char *)sqlite3_column_text(stmt, 4);
+        const char *first_seen = (const char *)sqlite3_column_text(stmt, 5);
+        const char *reporter = (const char *)sqlite3_column_text(stmt, 6);
+
+        strncpy(threat.filepath, filepath ? filepath : "", MAX_PATH - 1);
+        threat.filepath[MAX_PATH - 1] = '\0';
+
+        strncpy(threat.sha256_hash, hash ? hash : "", 64);
+        threat.sha256_hash[64] = '\0';
+
+        strncpy(threat.detection_date, scan_date ? scan_date : "", 31);
+        threat.detection_date[31] = '\0';
+
+        strncpy(threat.malware_name, file_name ? file_name : "Unknown", 255);
+        threat.malware_name[255] = '\0';
+
+        strncpy(threat.malware_type, file_type ? file_type : "Unknown", 63);
+        threat.malware_type[63] = '\0';
+
+        strncpy(threat.first_seen, first_seen ? first_seen : "", 31);
+        threat.first_seen[31] = '\0';
+
+        strncpy(threat.reporter, reporter ? reporter : "Unknown", 127);
+        threat.reporter[127] = '\0';
+
+        add_threat(report, &threat);
 
         threat_count++;
         log_warning("THREAT DETECTED: %s [%s]", filepath, hash);

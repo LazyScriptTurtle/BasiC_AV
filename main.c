@@ -4,15 +4,15 @@
 #include "Database\database.h"
 #include <stdio.h>
 #include "MalwareDB\malware_db.h"
+#include "Reporter\reporter.h"
 
 void initialize_system()
 {
     log_info("System initialization");
-    if (!file_exists("BasicAV.sqlite3"))
-    {
-        log_info("Creating database");
-        init_database("BasicAV.sqlite3");
-    }
+    
+    // POPRAWKA #1: Zawsze inicjalizuj bazę (ustawi DB_PATH)
+    init_database("BasicAV.sqlite3");
+    
     log_info("Loading malware database");
     int count = load_malware_csv("Downloader\\full.csv", "MalwareBazaar");
     if (count > 0)
@@ -20,10 +20,13 @@ void initialize_system()
         char msg[128];
         sprintf(msg, "Loaded %d malware signatures", count);
         log_info(msg);
-    }else {
+    }
+    else
+    {
         log_info("Loading RECENT malware signatures (24h)");
         int count = load_malware_csv("Downloader\\recent.csv", "MalwareBazaar");
-        if (count > 0) {
+        if (count > 0)
+        {
             char msg[128];
             sprintf(msg, "Loaded %d new signatures", count);
             log_info(msg);
@@ -33,8 +36,8 @@ void initialize_system()
 
 int is_first_run()
 {
-
-    return !file_exists("Database\\first_rusn.txt");
+    // POPRAWKA #2: Zmień "rusn" na "run"
+    return !file_exists("Database\\first_run.txt");
 }
 
 void mark_first_run_complete()
@@ -47,6 +50,7 @@ void mark_first_run_complete()
         fclose(flag);
     }
 }
+
 void perform_initial_scan()
 {
     log_info("First run detected - scanning all drives");
@@ -57,8 +61,12 @@ void perform_initial_scan()
 void run_threat_scan()
 {
     log_info("Searching for malicious files");
-    int threats = compare_hashes();
-
+    
+    ThreatReport report;
+    init_report(&report);
+    
+    int threats = compare_hashes(&report);  
+    
     if (threats == 0)
     {
         log_info("No threats found");
@@ -66,18 +74,26 @@ void run_threat_scan()
     else if (threats > 0)
     {
         log_warning("Threats found: %d", threats);
+        
+        // Generuj raport
+        generate_csv_report(&report, "threats.csv");
+        log_info("CSV report saved: threats.csv");
+        generate_html_report(&report, "threats.html");
     }
     else
     {
         log_error("Error during threat comparison");
     }
+    
+    cleanup_report(&report);
 }
 
 int main()
 {
     initialize_system();
     
-    if (is_first_run()) {
+    if (is_first_run())
+    {
         perform_initial_scan();
         mark_first_run_complete();
     }
