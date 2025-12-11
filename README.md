@@ -1,227 +1,196 @@
-# 🛡️ BasicAV - Educational Antivirus in C
+# BasicAV - Educational Antivirus in C
 
-![Language](https://img.shields.io/badge/Language-C-blue)
-![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey)
-![Database](https://img.shields.io/badge/Database-SQLite3-green)
-![License](https://img.shields.io/badge/License-Educational-orange)
+**Educational antivirus project written in pure C for Windows**
 
-**BasicAV** is an educational antivirus project written in pure C for Windows, designed to teach:
-- Systems programming (Windows API, CryptoAPI)
-- Memory management (malloc, realloc, free)
-- SQLite database operations
-- Modular architecture
-- Malware signature matching
-
-> ⚠️ **WARNING:** This is an educational project. Do NOT use as primary antivirus protection.
+A learning project focused on systems programming, Windows API, database operations, and modular architecture in C. This is NOT production-ready security software - it's designed for understanding how antivirus software works under the hood.
 
 ---
 
-## ✨ Features
+## What it does
 
-### ✅ **Currently Implemented**
-- **SHA-256 Hashing** - Fast chunk-based file hashing using Windows CryptoAPI
-- **Recursive Directory Scanner** - Scans drives/folders and stores hashes in SQLite
-- **Malware Signature Database** - Integration with MalwareBazaar (100k+ signatures)
-- **Threat Detection** - Compares scanned files against known malware hashes
-- **CSV/HTML Reports** - Professional Windows Defender-style threat reports
-- **Logging System** - Timestamped logs to file and console
+BasicAV scans files on your system, calculates their SHA-256 hashes, and compares them against a database of known malware signatures from MalwareBazaar. When threats are detected, it generates both CSV and HTML reports.
 
-### ⏳ **Planned Features**
-- **Real-time File Monitor** - Auto-scan new/modified files (ReadDirectoryChangesW)
-- **Quarantine Module** - Isolate detected threats
-- **Config Parser** - INI-based configuration
-- **Context Menu Integration** - Right-click "Scan with BasicAV"
-- **Auto-Update Signatures** - Scheduled malware database updates
+**Current features:**
+- SHA-256 file hashing using Windows CryptoAPI
+- Recursive directory scanning
+- SQLite database for storing file hashes and malware signatures
+- Integration with MalwareBazaar's malware database (100,000+ signatures)
+- Threat detection via hash comparison
+- Professional HTML and CSV reports
+
+**Planned additions:**
+- Real-time file monitoring
+- Quarantine system for detected threats
+- Configuration file support
+- Context menu integration (right-click "Scan with BasicAV")
 
 ---
 
-## 🏗️ Architecture
+## Project structure
 ```
 BasicAV/
-├── Logger/          # Logging system (file + console)
-├── Hash/            # SHA-256 calculator (CryptoAPI)
-├── Scanner/         # Recursive directory scanner
-├── Database/        # SQLite wrapper (scanned_files + malware_hashes)
-├── Reporter/        # CSV/HTML report generator
-├── MalwareDB/       # CSV importer for MalwareBazaar
-├── Downloader/      # PowerShell scripts (API fetch)
-└── main.c           # Main orchestrator
+├── Logger/          - Logging system (writes to file and console)
+├── Hash/            - SHA-256 calculator using Windows CryptoAPI
+├── Scanner/         - Recursive directory scanner
+├── Database/        - SQLite wrapper for file hashes and malware signatures
+├── Reporter/        - CSV and HTML report generator
+├── MalwareDB/       - CSV importer for MalwareBazaar database
+├── Downloader/      - PowerShell scripts to fetch malware signatures
+└── main.c           - Main program logic
 ```
 
 ---
 
-## 🚀 Quick Start
+## Getting started
 
-### **Prerequisites**
-- Windows 10/11
-- Visual Studio 2019+ (MSVC compiler)
-- PowerShell 5.1+
+**Requirements:**
+- Windows 10 or 11
+- Visual Studio 2019 or newer (MSVC compiler)
+- PowerShell 5.1 or newer
 
-### **Installation**
+**Building the project:**
 
-1. **Clone the repository**
+1. Clone this repository
 ```bash
 git clone https://github.com/LazyScriptTurtle/BasiC_AV.git
 cd BasiC_AV
 ```
 
-2. **Download malware signatures** (PowerShell)
+2. Download malware signatures using PowerShell
 ```powershell
 cd Downloader
-.\download_recent.ps1    # Last 24h (fast)
-.\download_full.ps1      # Full database (slow, 100k+ signatures)
+.\download_recent.ps1    # Gets last 24 hours of signatures (faster)
+.\download_full.ps1      # Gets full database (slower, 100k+ signatures)
 ```
 
-3. **Compile** (Developer Command Prompt)
+3. Compile using Developer Command Prompt for Visual Studio
 ```cmd
 cl Logger\logger.c Database\database.c Database\sqlite3.c Hash\hash.c ^
    Scanner\scanner.c Reporter\reporter.c MalwareDB\malware_db.c main.c ^
    Advapi32.lib /Fe:BasicAV.exe
 ```
 
-4. **Run**
+4. Run the executable
 ```cmd
 BasicAV.exe
 ```
 
 ---
 
-## 📊 How It Works
+## How it works
 
-### **1. First Run (Initialization)**
-```
-1. Create SQLite database (scanned_files + malware_hashes)
-2. Import malware signatures from CSV
-3. Scan critical directories:
-   - Downloads
-   - Desktop
-   - AppData\Local\Temp
-   - Documents
-4. Store SHA-256 hashes in database
-5. Mark first_run.txt
-```
+**First run:**
+1. Creates SQLite database with two tables (scanned files and malware signatures)
+2. Imports malware signatures from CSV files
+3. Scans critical directories (Downloads, Desktop, AppData\Local\Temp, Documents)
+4. Stores SHA-256 hashes of all scanned files
+5. Creates a marker file to track first run completion
 
-### **2. Subsequent Runs (Threat Scan)**
-```
-1. Load database
-2. SQL JOIN: scanned_files ⋈ malware_hashes (on SHA-256)
-3. Generate reports:
-   - threats.csv (machine-readable)
-   - threats.html (human-readable dashboard)
-```
+**Subsequent runs:**
+1. Loads the database
+2. Compares scanned file hashes against known malware signatures
+3. Generates threat reports (CSV and HTML formats)
 
-### **3. Report Example**
+**Report outputs:**
 
-**CSV Output:**
+CSV format (threats.csv):
 ```csv
 Filepath,SHA256,Malware Name,Type,First Seen,Reporter,Detection Date
 C:\test.exe,abc123...,Trojan.Win32.Agent,exe,2024-01-15,MalwareBazaar,2025-12-11
 ```
 
-**HTML Dashboard:**
-- Dark mode design (Windows Defender style)
-- 3 metric cards: Files Scanned | Threats Found | Status
-- Detailed threat table with all metadata
-- Responsive layout
+HTML format: Dark-themed dashboard with metrics cards and detailed threat table
 
 ---
 
-## 🧠 What I Learned
+## What I learned building this
 
-### **C Programming**
-- `malloc()`, `realloc()`, `free()` - dynamic memory management
-- Structures (`typedef struct`) and pointers (`->`)
-- Forward declarations (solving circular dependencies)
-- String handling (`strncpy`, buffer overflow protection)
-- Variadic functions (`va_list`, `va_start`)
+**C programming concepts:**
+- Dynamic memory management (malloc, realloc, free)
+- Structures and pointers
+- Forward declarations for circular dependencies
+- String handling and buffer overflow protection
+- Variadic functions for logging
 
-### **Windows API**
-- **CryptoAPI** - `CryptAcquireContext`, `CryptCreateHash`, `CryptHashData`
-- **File System** - `FindFirstFile`, `FindNextFile`, `GetFileAttributes`
-- **User Info** - `GetUserName`
+**Windows API:**
+- CryptoAPI for SHA-256 hashing
+- File system operations (FindFirstFile, FindNextFile)
+- User information retrieval
 
-### **Database**
-- SQLite prepared statements (SQL injection prevention)
-- Transaction batching (10k inserts at once)
-- Efficient CSV parsing (65k line buffer)
+**Database operations:**
+- SQLite prepared statements (prevents SQL injection)
+- Transaction batching for performance
+- Efficient CSV parsing
 
-### **Software Engineering**
-- Modular architecture (separation of concerns)
+**Software design:**
+- Modular architecture
+- Separation of concerns
 - Error handling patterns
-- Callback pattern (function pointers)
-- Memory leak prevention
+- Callback functions
 
 ---
 
-## 🐛 Known Issues
+## Known issues
 
-1. **UTF-8 Emoji Corruption** - HTML report uses corrupted emoji encoding
-2. **No Real-time Protection** - Currently scan-on-demand only
-3. **No Quarantine** - Detected threats are logged but not isolated
-4. **System Folder Scanning** - Should skip `C:\Windows\System32` etc.
+- No real-time protection (scan-on-demand only)
+- Scans system folders that should be skipped (Windows\System32, etc.)
+- No recursion depth limit
+- Detected threats are logged but not quarantined
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
-Edit these constants in source files:
-
-**Scanner (scanner.c)**
+You can modify scan paths in scanner.c:
 ```c
 char *paths[] = {
     "C:\\Users\\%USERNAME%\\Downloads",
     "C:\\Users\\%USERNAME%\\Desktop",
-    // Add more paths...
+    "C:\\Users\\%USERNAME%\\AppData\\Local\\Temp",
+    "C:\\Windows\\Temp",
+    "C:\\Users\\%USERNAME%\\Documents",
+    NULL
 };
 ```
 
-**Database (database.c)**
+Database location is set in main.c:
 ```c
-char DB_PATH[256] = "BasicAV.sqlite3";
+init_database("BasicAV.sqlite3");
 ```
 
 ---
 
-## 📈 Roadmap
+## Next steps
 
-- [ ] **Real-time File Monitor** (ReadDirectoryChangesW)
-- [ ] **Quarantine Module** (move to safe location)
-- [ ] **Config Parser** (config.ini)
-- [ ] **Context Menu Integration** (Registry)
-- [ ] **Auto-Update Service** (Task Scheduler)
-- [ ] **Web Dashboard** (local HTTP server)
+The next major feature planned is real-time file monitoring using Windows ReadDirectoryChangesW API. This will enable BasicAV to automatically scan new or modified files as they appear on the system.
 
----
-
-## 📚 Resources
-
-- **MalwareBazaar API**: https://bazaar.abuse.ch/api/
-- **SQLite Documentation**: https://www.sqlite.org/docs.html
-- **Windows CryptoAPI**: https://learn.microsoft.com/en-us/windows/win32/seccrypto/
+Other improvements:
+- Add system folder blacklist
+- Implement recursion depth limits
+- Create configuration file parser (INI format)
+- Add quarantine functionality
+- Implement context menu integration
 
 ---
 
-## 🤝 Contributing
+## Resources used
 
-This is an educational project. Feel free to:
-- Report bugs
-- Suggest improvements
-- Fork and experiment
-
----
-
-## 📝 License
-
-Educational use only. Not licensed for production antivirus use.
+- MalwareBazaar API: https://bazaar.abuse.ch/api/
+- SQLite documentation: https://www.sqlite.org/docs.html
+- Windows CryptoAPI: https://learn.microsoft.com/en-us/windows/win32/seccrypto/
 
 ---
 
-## 🙏 Acknowledgments
+## Contributing
 
-- **MalwareBazaar** for free malware signature database
-- **SQLite** for embedded database engine
-- **Microsoft** for comprehensive Windows API documentation
+This is an educational project. Feel free to fork it, report bugs, or suggest improvements. The goal is learning, not building production antivirus software.
 
 ---
 
-**Made with ❤️ for learning C and systems programming**
+## License
+
+Educational use only. Not intended for production use as antivirus software.
+
+---
+
+Made as a learning project for systems programming and Windows API
