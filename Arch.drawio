@@ -1,0 +1,362 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.7" pages="3">
+  <diagram id="h09CM1ZejIiYRdGofmBN" name="Architecture">
+    <mxGraphModel dx="1426" dy="783" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-1" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f5f5f5;strokeColor=#666666;" value="EXTERNAL" vertex="1">
+          <mxGeometry height="420" width="280" x="40" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-2" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="PowerShell Script&#xa;MalwareBazaar API&#xa;CSV Download" vertex="1">
+          <mxGeometry height="100" width="240" x="60" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-3" parent="1" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;" value="BasicAV.sqlite3&#xa;• scanned_files&#xa;• malware_hashes" vertex="1">
+          <mxGeometry height="120" width="190" x="85" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-4" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#fff2cc;strokeColor=#d6b656;" value="threats.csv&#xa;(Machine readable)" vertex="1">
+          <mxGeometry height="80" width="240" x="60" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-5" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f5f5f5;strokeColor=#666666;" value="C MODULES" vertex="1">
+          <mxGeometry height="420" width="1200" x="360" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-6" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Logger&#xa;• log_info()&#xa;• log_warning()&#xa;• log_error()&#xa;Variadic functions" vertex="1">
+          <mxGeometry height="120" width="180" x="380" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-7" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Hash&#xa;• calculate_file_hash()&#xa;Windows CryptoAPI&#xa;SHA-256 (chunk-based)" vertex="1">
+          <mxGeometry height="120" width="180" x="380" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-8" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Scanner&#xa;• scan_directory()&#xa;• scan_all_drives()&#xa;• fast_scan_critical()&#xa;RECURSIVE" vertex="1">
+          <mxGeometry height="140" width="200" x="590" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-9" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Database&#xa;• init_database()&#xa;• insert_file_record()&#xa;• insert_malware_hash()&#xa;• compare_hashes()&#xa;SQLite prepared statements" vertex="1">
+          <mxGeometry height="150" width="220" x="820" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-10" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Reporter&#xa;• init_report()&#xa;• add_threat()&#xa;• generate_csv_report()&#xa;• generate_html_report()&#xa;• cleanup_report()&#xa;Dynamic memory (malloc/realloc)" vertex="1">
+          <mxGeometry height="160" width="240" x="1070" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-11" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="MalwareDB&#xa;• load_malware_csv()&#xa;CSV Parser&#xa;Transaction batching" vertex="1">
+          <mxGeometry height="110" width="200" x="590" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-12" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f5f5f5;strokeColor=#666666;" value="MAIN PROGRAM" vertex="1">
+          <mxGeometry height="180" width="1200" x="360" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-13" parent="1" style="whiteSpace=wrap;strokeWidth=2;fillColor=#e1d5e7;strokeColor=#9673a6;" value="main.c&#xa;• initialize_system()&#xa;• is_first_run()&#xa;• perform_initial_scan()&#xa;• run_threat_scan()&#xa;Orchestration" vertex="1">
+          <mxGeometry height="130" width="280" x="760" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-14" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-13" style="curved=1;startArrow=none;endArrow=block;strokeColor=#6c8ebf;" target="hruw6D_KdkrXjAi4_9UR-6" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-15" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-13" style="curved=1;startArrow=none;endArrow=block;strokeColor=#6c8ebf;" target="hruw6D_KdkrXjAi4_9UR-7" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-16" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-13" style="curved=1;startArrow=none;endArrow=block;strokeColor=#6c8ebf;" target="hruw6D_KdkrXjAi4_9UR-8" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="690" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-17" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-13" style="curved=1;startArrow=none;endArrow=block;strokeColor=#6c8ebf;" target="hruw6D_KdkrXjAi4_9UR-9" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="930" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-18" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-13" style="curved=1;startArrow=none;endArrow=block;strokeColor=#d79b00;" target="hruw6D_KdkrXjAi4_9UR-10" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1190" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-19" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-13" style="curved=1;startArrow=none;endArrow=block;strokeColor=#6c8ebf;" target="hruw6D_KdkrXjAi4_9UR-11" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="690" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-20" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-8" style="curved=1;startArrow=none;endArrow=block;strokeColor=#666666;dashed=1;" target="hruw6D_KdkrXjAi4_9UR-7" value="uses">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-21" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-8" style="curved=1;startArrow=none;endArrow=block;strokeColor=#666666;dashed=1;" target="hruw6D_KdkrXjAi4_9UR-9" value="stores to">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="810" y="240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-22" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-9" style="curved=1;startArrow=none;endArrow=block;strokeColor=#d79b00;dashed=1;" target="hruw6D_KdkrXjAi4_9UR-10" value="callback: add_threat()">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1050" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-23" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-10" style="curved=1;startArrow=none;endArrow=block;strokeColor=#666666;dashed=1;" target="hruw6D_KdkrXjAi4_9UR-9" value="extern DB_PATH">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1050" y="280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-24" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-11" style="curved=1;startArrow=none;endArrow=block;strokeColor=#666666;dashed=1;" target="hruw6D_KdkrXjAi4_9UR-9" value="imports to">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="810" y="365" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-25" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-2" style="curved=1;startArrow=none;endArrow=block;strokeColor=#82b366;" target="hruw6D_KdkrXjAi4_9UR-3" value="INSERT">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="180" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-26" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-9" style="curved=1;startArrow=none;endArrow=block;strokeColor=#82b366;" target="hruw6D_KdkrXjAi4_9UR-3" value="manages">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="330" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hruw6D_KdkrXjAi4_9UR-27" edge="1" parent="1" source="hruw6D_KdkrXjAi4_9UR-10" style="curved=1;startArrow=none;endArrow=block;strokeColor=#d6b656;" target="hruw6D_KdkrXjAi4_9UR-4" value="generates">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="Workflow" id="7le3z0Eo03AJWhH_-0to">
+    <mxGraphModel dx="2037" dy="1119" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- START -->
+        <mxCell id="wf-1" value="START PROGRAM" style="rounded=1;whiteSpace=wrap;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="475" y="40" width="250" height="60" as="geometry" />
+        </mxCell>
+        <!-- init_database -->
+        <mxCell id="wf-2" value="init_database()&#xa;Open SQLite&#xa;Create tables" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="475" y="140" width="250" height="80" as="geometry" />
+        </mxCell>
+        <!-- load_malware_csv -->
+        <mxCell id="wf-3" value="load_malware_csv()&#xa;Import signatures&#xa;from full.csv or recent.csv" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="475" y="260" width="250" height="90" as="geometry" />
+        </mxCell>
+        <!-- Decision: First Run? -->
+        <mxCell id="wf-4" value="first_run.txt&#xa;exists?" style="rhombus;strokeWidth=2;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="500" y="390" width="200" height="120" as="geometry" />
+        </mxCell>
+        <!-- FIRST RUN PATH -->
+        <mxCell id="wf-5" value="FIRST RUN" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="180" y="560" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="wf-6" value="fast_scan_critical_directory()&#xa;Downloads, Desktop, Temp, Documents" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="140" y="650" width="320" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="wf-7" value="For each file:&#xa;1. calculate_file_hash()&#xa;2. insert_file_record()" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="140" y="760" width="320" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="wf-8" value="Create flag&#xa;first_run.txt" style="whiteSpace=wrap;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="180" y="890" width="240" height="60" as="geometry" />
+        </mxCell>
+        <!-- NORMAL RUN PATH -->
+        <mxCell id="wf-9" value="NORMAL RUN" style="whiteSpace=wrap;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="760" y="560" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="wf-10" value="Skip full scan&#xa;Database already populated" style="whiteSpace=wrap;strokeWidth=2;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="760" y="650" width="240" height="70" as="geometry" />
+        </mxCell>
+        <!-- MERGE POINT -->
+        <mxCell id="wf-11" value="Merge Point" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="475" y="1000" width="250" height="50" as="geometry" />
+        </mxCell>
+        <!-- run_threat_scan - UPDATED! -->
+        <mxCell id="wf-12" value="run_threat_scan()&#xa;1. init_report(&amp;report)&#xa;2. compare_hashes(&amp;report)&#xa;   → SQL JOIN&#xa;   → add_threat() for each match&#xa;3. generate_csv_report()&#xa;4. generate_html_report()&#xa;5. cleanup_report()" style="whiteSpace=wrap;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1090" width="360" height="180" as="geometry" />
+        </mxCell>
+        <!-- Decision: Threats found? -->
+        <mxCell id="wf-13" value="Threats&#xa;found?" style="rhombus;strokeWidth=2;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1310" width="200" height="120" as="geometry" />
+        </mxCell>
+        <!-- YES: Display Warning -->
+        <mxCell id="wf-14" value="Display warning&#xa;Show threat list&#xa;Open threats.html" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="180" y="1480" width="240" height="90" as="geometry" />
+        </mxCell>
+        <!-- NO: System OK -->
+        <mxCell id="wf-15" value="System OK&#xa;No threats detected" style="whiteSpace=wrap;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="760" y="1480" width="240" height="90" as="geometry" />
+        </mxCell>
+        <!-- END -->
+        <mxCell id="wf-16" value="END" style="rounded=1;whiteSpace=wrap;strokeWidth=2;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="525" y="1620" width="150" height="50" as="geometry" />
+        </mxCell>
+        <!-- Connections -->
+        <mxCell id="wfc-1" value="" edge="1" parent="1" source="wf-1" target="wf-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wfc-2" value="" edge="1" parent="1" source="wf-2" target="wf-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wfc-3" value="" edge="1" parent="1" source="wf-3" target="wf-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wfc-4" value="NO" edge="1" parent="1" source="wf-4" target="wf-5" style="curved=1;startArrow=none;endArrow=block;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wfc-5" value="YES" edge="1" parent="1" source="wf-4" target="wf-9" style="curved=1;startArrow=none;endArrow=block;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wfc-6" value="" edge="1" parent="1" source="wf-5" target="wf-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wfc-7" value="" edge="1" parent="1" source="wf-6" target="wf-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wfc-8" value="" edge="1" parent="1" source="wf-7" target="wf-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wfc-9" value="" edge="1" parent="1" source="wf-9" target="wf-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wfc-10" value="" edge="1" parent="1" source="wf-8" target="wf-11" style="curved=1;startArrow=none;endArrow=block;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="970" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wfc-11" value="" edge="1" parent="1" source="wf-10" target="wf-11" style="curved=1;startArrow=none;endArrow=block;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="970" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wfc-12" value="" edge="1" parent="1" source="wf-11" target="wf-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wfc-13" value="" edge="1" parent="1" source="wf-12" target="wf-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wfc-14" value="YES" edge="1" parent="1" source="wf-13" target="wf-14" style="curved=1;startArrow=none;endArrow=block;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="1450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wfc-15" value="NO" edge="1" parent="1" source="wf-13" target="wf-15" style="curved=1;startArrow=none;endArrow=block;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="1450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wfc-16" value="" edge="1" parent="1" source="wf-14" target="wf-16" style="curved=1;startArrow=none;endArrow=block;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="1590" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wfc-17" value="" edge="1" parent="1" source="wf-15" target="wf-16" style="curved=1;startArrow=none;endArrow=block;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="1590" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="TODO" id="kHDwgL8iDpClqzBdWMDO">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Title -->
+        <mxCell id="todo-title" value="BasicAV TODO LIST" style="text;fontSize=24;fontStyle=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="400" y="40" width="400" height="50" as="geometry" />
+        </mxCell>
+        <!-- PHASE 1: CRITICAL -->
+        <mxCell id="todo-p1" value="PHASE 1: CRITICAL (NEXT STEP)" style="whiteSpace=wrap;strokeWidth=3;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="500" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="todo-p1-1" value="☐ Real-time File Monitor&#xa;   - ReadDirectoryChangesW API&#xa;   - Monitor: Downloads, Desktop, Temp&#xa;   - Auto-scan on file create/modify&#xa;   - Integration with compare_hashes()" style="whiteSpace=wrap;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;" vertex="1" parent="1">
+          <mxGeometry x="100" y="190" width="460" height="110" as="geometry" />
+        </mxCell>
+        <!-- PHASE 2: BUG FIXES -->
+        <mxCell id="todo-p2" value="PHASE 2: BUG FIXES" style="whiteSpace=wrap;strokeWidth=3;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="80" y="330" width="500" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="todo-p2-1" value="☐ Fix UTF-8 emoji in HTML report&#xa;☐ Fix buffer overflow in scanner.c (msg[1045])&#xa;☐ Add error handling for malloc failures" style="whiteSpace=wrap;strokeWidth=2;fillColor=#fff2cc;strokeColor=#d6b656;align=left;" vertex="1" parent="1">
+          <mxGeometry x="100" y="400" width="460" height="80" as="geometry" />
+        </mxCell>
+        <!-- PHASE 3: OPTIMIZATIONS -->
+        <mxCell id="todo-p3" value="PHASE 3: OPTIMIZATIONS" style="whiteSpace=wrap;strokeWidth=3;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="80" y="510" width="500" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="todo-p3-1" value="☐ should_skip_path() - blacklist system folders&#xa;☐ Recursion depth limit (max 10 levels)&#xa;☐ Log rate limiting (100 logs/second)&#xa;☐ Config parser (config.ini)" style="whiteSpace=wrap;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;" vertex="1" parent="1">
+          <mxGeometry x="100" y="580" width="460" height="100" as="geometry" />
+        </mxCell>
+        <!-- PHASE 4: FEATURES -->
+        <mxCell id="todo-p4" value="PHASE 4: ADDITIONAL FEATURES" style="whiteSpace=wrap;strokeWidth=3;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="620" y="120" width="500" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="todo-p4-1" value="☐ Quarantine module (move threats)&#xa;☐ Context menu integration (Registry)&#xa;☐ Auto-update signatures (Task Scheduler)&#xa;☐ Web dashboard (local HTTP server)&#xa;☐ Terminal UI (ncurses-style)" style="whiteSpace=wrap;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;align=left;" vertex="1" parent="1">
+          <mxGeometry x="640" y="190" width="460" height="120" as="geometry" />
+        </mxCell>
+        <!-- OPTIONAL: Windows Services -->
+        <mxCell id="todo-p5" value="OPTIONAL: WINDOWS SERVICES" style="whiteSpace=wrap;strokeWidth=3;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="620" y="340" width="500" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="todo-p5-1" value="☐ Monitor Service (background real-time)&#xa;☐ Update Service (auto-download signatures)&#xa;☐ Scan Service (scheduled daily scans)&#xa;Note: NOT ESSENTIAL - can use Task Scheduler" style="whiteSpace=wrap;strokeWidth=2;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;" vertex="1" parent="1">
+          <mxGeometry x="640" y="410" width="460" height="100" as="geometry" />
+        </mxCell>
+        <!-- LEGEND -->
+        <mxCell id="todo-legend" value="PRIORITY LEGEND" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="540" width="500" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="todo-legend-1" value="🔴 CRITICAL - Must do next" style="whiteSpace=wrap;strokeWidth=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;" vertex="1" parent="1">
+          <mxGeometry x="640" y="600" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="todo-legend-2" value="🟡 IMPORTANT - Should do soon" style="whiteSpace=wrap;strokeWidth=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;" vertex="1" parent="1">
+          <mxGeometry x="880" y="600" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="todo-legend-3" value="🟢 NICE TO HAVE - Optional" style="whiteSpace=wrap;strokeWidth=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;" vertex="1" parent="1">
+          <mxGeometry x="640" y="650" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="todo-legend-4" value="🟣 LOW PRIORITY - Over-engineering" style="whiteSpace=wrap;strokeWidth=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;" vertex="1" parent="1">
+          <mxGeometry x="880" y="650" width="220" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
