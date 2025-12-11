@@ -59,8 +59,7 @@ cd BasiC_AV
 2. Download malware signatures using PowerShell
 ```powershell
 cd Downloader
-.\download_recent.ps1    # Gets last 24 hours of signatures (faster)
-.\download_full.ps1      # Gets full database (slower, 100k+ signatures)
+.\malware_bazzar_connector.ps1 -downloadFreshhashes "Yes" <-- Download all hashehs from 24h. If it run first time then download all available hashes from MalwareBazzar
 ```
 
 3. Compile using Developer Command Prompt for Visual Studio
